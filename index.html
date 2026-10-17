@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#eaded0">
+<title>Nosso pequeno universo</title>
+<style>
+:root{--paper:#fffaf0;--ink:#46372f;--rose:#b66d75;--dark:#874b55;--line:#e9d8c8;--sage:#87927a}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at top,#fff8f0,#eaded0 75%);color:var(--ink);font-family:Georgia,"Times New Roman",serif}
+button,input,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:999px;padding:11px 18px;background:var(--rose);color:white;transition:.18s}button:hover{background:var(--dark);transform:translateY(-1px)}button.secondary{background:#eee2d6;color:var(--ink)}button.secondary:hover{background:#e2d0c0}
+.wrap{max-width:1050px;margin:auto;padding:25px 16px 50px}.top{text-align:center;margin:10px auto 25px}.eyebrow{font:11px Arial,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:var(--dark)}h1{font-size:clamp(2rem,6vw,3.5rem);font-weight:normal;margin:12px 0 8px}.subtitle,.muted{font-style:italic;color:#8c7667}
+.panel{background:#fffaf0ed;border:1px solid #fff;border-radius:18px;box-shadow:0 18px 50px #4d30221c;padding:clamp(18px,4vw,34px);position:relative}.panel:before{content:"";position:absolute;inset:8px;border:1px solid #ead9c9;border-radius:12px;pointer-events:none}.hidden{display:none!important}.inner{position:relative}.login{max-width:440px;margin:35px auto}.section-title{text-align:center;font-size:clamp(1.6rem,4vw,2.3rem);font-weight:normal;margin:0 0 8px}.center{text-align:center}
+.field{display:block;margin:15px 0}.field span{display:block;font-size:13px;margin-bottom:7px;color:#806a5c}.field input,.field textarea{width:100%;border:1px solid #dfcbbb;border-radius:9px;background:#fffdf8;padding:12px;color:var(--ink);outline-color:var(--rose)}
+.hint{font:12px Arial,sans-serif;line-height:1.5;color:#8b7768}.nav,.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:20px 0;position:relative}.editor{max-width:790px;margin:auto}.date-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.notebook{margin-top:12px;position:relative;background-color:#fffdf8;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 31px,#d7e2e7 32px,#d7e2e7 33px);border:1px solid #e4d2c1;border-radius:10px;box-shadow:inset 6px 0 #f2d7d4;padding:0 15px 0 25px}.notebook textarea{display:block;width:100%;height:340px;resize:vertical;border:0;outline:0;background:transparent;line-height:33px;padding:0 4px;color:#4d4039;font-size:17px}
+.status{min-height:20px;text-align:center;font-size:13px;color:var(--sage)}.status.error{color:#a34850}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-top:24px;position:relative}
+.memory-card{min-height:170px;text-align:left;background:#fffdf8;color:var(--ink);border:1px solid #e6d3c3;border-radius:5px;padding:20px 18px;box-shadow:0 8px 20px #55362212;position:relative;white-space:normal}.memory-card:before{content:"";display:block;height:5px;background:#d9a6a0;margin:-20px -18px 15px}.memory-card:hover{background:#fff8f1;color:var(--ink)}.memory-date{font:11px Arial,sans-serif;letter-spacing:.08em;color:var(--dark);text-transform:uppercase}.memory-title{font-size:21px;margin:11px 0}.memory-preview{font-size:14px;line-height:1.5;color:#897465}.empty{grid-column:1/-1;text-align:center;padding:38px 10px;color:#927d6e;font-style:italic}.read-text{white-space:pre-wrap;line-height:1.9;font-size:17px;background:#fffdf8;border:1px solid #e7d8ca;border-radius:10px;padding:22px;min-height:180px;position:relative}.footer{text-align:center;margin-top:28px;color:#9b8575;font-size:12px}
+@media(max-width:560px){.wrap{padding:16px 12px 40px}.date-row{grid-template-columns:1fr}.notebook textarea{height:300px;font-size:16px}.panel:before{inset:5px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top"><div class="eyebrow">um lugar só nosso</div><h1>Nosso pequeno universo</h1><div class="subtitle">“Alguns momentos merecem ficar para sempre.”</div></header>
+<section id="loginView" class="panel login"><div class="inner">
+<h2 class="section-title">Entre no seu diário</h2><p class="center muted">Suas lembranças, guardadas com carinho.</p>
+<form id="loginForm">
+<label class="field"><span>E-mail</span><input id="email" type="email" autocomplete="username" placeholder="seu@email.com" required></label>
+<label class="field"><span>Senha</span><input id="password" type="password" autocomplete="current-password" placeholder="Sua senha" required></label>
+<div class="actions"><button type="submit">Abrir meu diário</button></div><p id="loginStatus" class="status"></p>
+</form><p class="hint">Eu te amo Emilayle</p>
+</div></section>
+<main id="appView" class="hidden">
+<div class="nav"><button id="newBtn">✎ Escrever lembrança</button><button id="memoriesBtn" class="secondary">♡ Ver meu diário</button><button id="logoutBtn" class="secondary">Sair</button></div>
+<section id="editorView" class="panel editor"><div class="inner">
+<h2 class="section-title">Uma página para guardar</h2><p class="center muted">Escreva como se estivesse preenchendo as páginas de um caderno.</p>
+<form id="memoryForm">
+<label class="field"><span>Título da lembrança</span><input id="memoryTitle" maxlength="100" placeholder="Um dia que quero lembrar..." required></label>
+<div class="date-row"><label class="field"><span>Data da lembrança</span><input id="memoryDate" type="date" required></label><label class="field"><span>Um pequeno detalhe (opcional)</span><input id="memoryMood" maxlength="80" placeholder="Um sorriso, um lugar, uma música..."></label></div>
+<label class="field"><span>O que você quer guardar?</span><div class="notebook"><textarea id="memoryBody" placeholder="Querido diário...&#10;&#10;Hoje eu quero guardar este momento porque..." required></textarea></div></label>
+<div class="actions"><button type="submit">Guardar lembrança</button><button id="cancelEdit" type="button" class="secondary hidden">Cancelar edição</button></div><p id="saveStatus" class="status"></p>
+</form></div></section>
+<section id="listView" class="panel hidden"><div class="inner"><h2 class="section-title">As páginas do meu diário</h2><p class="center muted">Cada lembrança é uma página da nossa história.</p><div id="memoryGrid" class="grid"></div></div></section>
+<section id="detailView" class="panel hidden"><div class="inner"><p id="detailDate" class="center memory-date"></p><h2 id="detailTitle" class="section-title"></h2><p id="detailMood" class="center muted"></p><div id="detailBody" class="read-text"></div><div class="actions"><button id="editMemory">Editar página</button><button id="deleteMemory" class="secondary">Apagar página</button><button id="backToList" class="secondary">Voltar ao diário</button></div></div></section>
+</main><div class="footer">feito de pequenos momentos e muito carinho</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://pprrdpnzsxrziwzwaboj.supabase.co";
+const SUPABASE_PUBLIC_KEY = "sb_publishable_oM3_K_0BhAW9Jbq0hP2ZXg_tjXt-RDh";
+const configured = SUPABASE_URL.startsWith("https://") && !SUPABASE_PUBLIC_KEY.startsWith("COLE_") && !SUPABASE_URL.includes("COLE_A_");
+const supabaseClient = configured ? window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY) : null;
+
+const $ = id => document.getElementById(id);
+let currentUser = null, memories = [], selectedMemory = null, editingId = null;
+const today = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
+const prettyDate = s => { if(!s)return ''; const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d).toLocaleDateString('pt-BR',{day:'numeric',month:'long',year:'numeric'}); };
+function show(view){['editorView','listView','detailView'].forEach(id=>$(id).classList.toggle('hidden',id!==view));}
+function status(el,msg,error=false){$(el).textContent=msg;$(el).classList.toggle('error',error);}
+function resetForm(){editingId=null;$('memoryForm').reset();$('memoryDate').value=today();status('saveStatus','');$('cancelEdit').classList.add('hidden');}
+function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function dbError(e){const msg=e?.message||'Ocorreu um erro.';if(msg.includes('memory_date'))return 'Falta adicionar a coluna memory_date no Supabase. Execute o SQL do arquivo README.';if(msg.includes('row-level security'))return 'O Supabase bloqueou a operação. Confira as políticas RLS do README.';return msg;}
+async function loadMemories(){
+ const {data,error}=await supabaseClient.from('memories').select('id,title,content,mood,created_at,updated_at,memory_date').eq('user_id',currentUser.id).order('memory_date',{ascending:false});
+ if(error)throw error;memories=data||[];
+}
+function renderMemories(){
+ const grid=$('memoryGrid');grid.innerHTML='';
+ if(!memories.length){grid.innerHTML='<div class="empty">Seu diário ainda está em branco.<br>Escreva a primeira lembrança para começar sua coleção.</div>';return;}
+ memories.forEach(m=>{const card=document.createElement('button');card.className='memory-card';card.type='button';const date=m.memory_date||m.created_at?.slice(0,10)||today();card.innerHTML=`<div class="memory-date">${esc(prettyDate(date))}</div><div class="memory-title">${esc(m.title)}</div><div class="memory-preview">${esc((m.content||'').slice(0,105))}${(m.content||'').length>105?'…':''}</div>`;card.addEventListener('click',()=>openMemory(m.id));grid.appendChild(card);});
+}
+async function openMemory(id){try{await loadMemories();selectedMemory=memories.find(m=>m.id===id);if(!selectedMemory)return;$('detailDate').textContent=prettyDate(selectedMemory.memory_date||selectedMemory.created_at.slice(0,10));$('detailTitle').textContent=selectedMemory.title;$('detailMood').textContent=selectedMemory.mood||'';$('detailBody').textContent=selectedMemory.content;show('detailView');}catch(e){alert(dbError(e));}}
+$('loginForm').addEventListener('submit',async e=>{
+ e.preventDefault();status('loginStatus','Entrando...');
+ if(!supabaseClient){status('loginStatus','Falta configurar a URL e a chave pública no código (veja o README).',true);return;}
+ const {data,error}=await supabaseClient.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});
+ if(error){status('loginStatus','Não foi possível entrar: '+error.message,true);return;}
+ currentUser=data.user;$('loginView').classList.add('hidden');$('appView').classList.remove('hidden');resetForm();
+ try{await loadMemories();renderMemories();show('editorView');status('loginStatus','');}catch(err){alert(dbError(err));}
+});
+$('newBtn').addEventListener('click',()=>{resetForm();show('editorView');});
+$('memoriesBtn').addEventListener('click',async()=>{try{await loadMemories();renderMemories();show('listView');}catch(e){alert(dbError(e));}});
+$('logoutBtn').addEventListener('click',async()=>{if(supabaseClient)await supabaseClient.auth.signOut();currentUser=null;memories=[];$('appView').classList.add('hidden');$('loginView').classList.remove('hidden');$('password').value='';status('loginStatus','Você saiu do diário.');});
+$('memoryForm').addEventListener('submit',async e=>{
+ e.preventDefault();if(!currentUser)return;status('saveStatus','Guardando sua lembrança...');
+ const payload={title:$('memoryTitle').value.trim(),memory_date:$('memoryDate').value||today(),mood:$('memoryMood').value.trim(),content:$('memoryBody').value.trim(),user_id:currentUser.id,updated_at:new Date().toISOString()};
+ try{
+  let result;
+  if(editingId)result=await supabaseClient.from('memories').update(payload).eq('id',editingId).eq('user_id',currentUser.id);
+  else result=await supabaseClient.from('memories').insert(payload);
+  if(result.error)throw result.error;
+  await loadMemories();renderMemories();resetForm();show('listView');
+ }catch(err){status('saveStatus',dbError(err),true);}
+});
+$('cancelEdit').addEventListener('click',()=>{resetForm();show('listView');});
+$('backToList').addEventListener('click',async()=>{await loadMemories();renderMemories();show('listView');});
+$('editMemory').addEventListener('click',()=>{if(!selectedMemory)return;editingId=selectedMemory.id;$('memoryTitle').value=selectedMemory.title;$('memoryDate').value=selectedMemory.memory_date||selectedMemory.created_at.slice(0,10);$('memoryMood').value=selectedMemory.mood||'';$('memoryBody').value=selectedMemory.content;$('cancelEdit').classList.remove('hidden');status('saveStatus','');show('editorView');});
+$('deleteMemory').addEventListener('click',async()=>{if(!selectedMemory||!confirm('Quer mesmo apagar esta lembrança?'))return;const {error}=await supabaseClient.from('memories').delete().eq('id',selectedMemory.id).eq('user_id',currentUser.id);if(error){alert(dbError(error));return;}selectedMemory=null;await loadMemories();renderMemories();show('listView');});
+$('memoryDate').value=today();
+if(supabaseClient){supabaseClient.auth.getSession().then(async({data})=>{if(data.session){currentUser=data.session.user;$('loginView').classList.add('hidden');$('appView').classList.remove('hidden');try{await loadMemories();renderMemories();show('editorView');}catch(e){alert(dbError(e));}}});}
+</script>
+</body></html>
